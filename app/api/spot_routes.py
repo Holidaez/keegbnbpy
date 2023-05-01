@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, session, request
 from app.models import User, db, Spot
-
+from .auth_routes import validation_errors_to_error_messages
+from app.forms import SpotForm
 from flask_login import current_user, login_user, logout_user, login_required
 
 spot_routes = Blueprint('spot', __name__)
@@ -9,6 +10,7 @@ spot_routes = Blueprint('spot', __name__)
 
 @spot_routes.route('/')
 def get_all_spots():
+    """Get All Spots"""
     spots_list = Spot.query.all()
     return_list = []
     default_img = "https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?cs=srgb&dl=pexels-binyamin-mellish-186077.jpg&fm=jpg"
@@ -41,6 +43,7 @@ def get_all_spots():
 
 @spot_routes.route('/<id>')
 def get_selected_spot(id):
+    """Get A selected spot by id"""
     selected_spot = Spot.query.get(id)
     #Turn spots into dictionaries
     spot_dict = selected_spot.to_dict()
@@ -77,3 +80,54 @@ def get_selected_spot(id):
     spot_dict['reviews'] = review_list
     spot_dict['images'] = image_list
     return spot_dict
+
+@spot_routes.route('/create', methods=["POST"])
+@login_required
+def create_a_spot():
+    form = SpotForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+    if form.validate_on_submit():
+        new_spot = Spot(
+            owner_id=form.data['owner_id'],
+            name=form.data['name'],
+            lat=form.data['lat'],
+            lng=form.data['lng'],
+            state=form.data['state'],
+            country=form.data['country'],
+            city=form.data['city'],
+            address=form.data['address'],
+            description=form.data['description'],
+            price=form.data['price']
+            )
+        db.session.add(new_spot)
+        db.session.commit()
+    return {'errors': validation_errors_to_error_message(form.errors)},401
+
+@spot_routes.route('/edit/<id>', methods=["PUT"])
+@login_required
+def update_your_spot(id):
+    form = SongForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+    if form.validate_on_submit():
+        spot_to_edit = Spot.query.get(id)
+        spot_to_edit['name'] = form.data['name']
+        spot_to_edit['lat'] = form.data['lat']
+        spot_to_edit['lng'] = form.data['lng']
+        spot_to_edit['state'] = form.data['state']
+        spot_to_edit['country'] = form.data['country']
+        spot_to_edit['city'] = form.data['city']
+        spot_to_edit['address'] = form.data['address']
+        spot_to_edit['description'] = form.data['description']
+        spot_to_edit['price'] = form.data['price']
+        db.session.commit()
+        returning_value = spot_to_edit.to_dict()
+        return returning_value
+    return {'errors': validation_errors_to_error_messages(form.errors)},401
+
+@spot_routes.route('/delete/<id>' methods=['DELETE'])
+@login_required
+def delete_your_spot(id):
+    to_delete = Spot.query.get(id)
+    db.session.delete(to_delete)
+    db.session.commit()
+    return {"Message": "Spot Deleted Successfully"}
