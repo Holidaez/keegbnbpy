@@ -38,6 +38,10 @@ def get_all_spots():
         #If a preview image was not set upload a preview image
         if not len(spot_images):
             spot_dict['preview_image'] = default_img
+
+        #Get and Attach the Owner of the Spot
+        owner = spot.owner
+        spot_dict['owner'] = owner.to_dict()
         return_list.append(spot_dict)
     return return_list
 
@@ -63,8 +67,14 @@ def get_selected_spot(id):
         final_review = review.to_dict()
         #add the image list
         final_review['images'] = review_image_list
+        #! Attach the review creator to the review
+        rev_user = review.user
+        #! Add the user to the review
+        final_review['user'] = rev_user.to_dict()
         #append the reivews to the spot
         review_list.append(final_review)
+
+
     #Setting the rating in the spot
     if len(spot_reviews):
         spot_dict['rating'] = rating / len(spot_reviews)
@@ -77,6 +87,9 @@ def get_selected_spot(id):
     #For each Image add the url to the image list
     for image in spot_images:
         image_list.append(image.url)
+    #Get and Attach the owner to the return object
+    spot_owner = selected_spot.owner
+    spot_dict['owner'] = spot_owner.to_dict()
     spot_dict['reviews'] = review_list
     spot_dict['images'] = image_list
     return spot_dict
@@ -124,7 +137,7 @@ def update_your_spot(id):
         return returning_value
     return {'errors': validation_errors_to_error_messages(form.errors)},401
 
-@spot_routes.route('/delete/<id>' methods=['DELETE'])
+@spot_routes.route('/delete/<id>', methods=['DELETE'])
 @login_required
 def delete_your_spot(id):
     to_delete = Spot.query.get(id)
