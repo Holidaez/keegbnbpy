@@ -23,9 +23,10 @@ const Chat = () => {
         socket = io();
         dispatch(getDMS(userId,ownerId))
         socket.on("chat", (chat) => {
-            let test = dispatch(getDMS(userId,ownerId))
-            let testArry = Object.values(test)
-            setMessages(...testArry)
+            // Whenver a chat is sent, Dispatch our fetch to get all messages and set the messages to the returned list
+            let msg = dispatch(getDMS(userId,ownerId))
+            let msgArr = Object.values(msg)
+            setMessages(...msgArr)
             console.log(messages)
         })
         // when component unmounts, disconnect
@@ -37,7 +38,7 @@ const Chat = () => {
     const updateChatInput = (e) => {
         setChatInput(e.target.value)
     };
-
+    // When we send a chat, we tell our socket in the backend what we're sending so that it can do work.
     const sendChat = (e) => {
         e.preventDefault()
         setisSending(true)
@@ -45,11 +46,7 @@ const Chat = () => {
         setisSending(false)
         setChatInput("")
     }
-    // useEffect(() => {
-    //     dispatch(getDMS(userId,ownerId))
 
-    // },[])
-    console.log(messageList)
     return (user && (
         <div>
             <div>

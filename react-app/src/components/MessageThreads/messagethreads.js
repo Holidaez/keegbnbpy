@@ -9,11 +9,13 @@ const MessageThreads = () => {
     const threads = useSelector(state => state.threads)
     const history = useHistory()
     const dispatch = useDispatch()
+    //On Mount, fetch all of the threads from the backend and load them in.
     useEffect(() => {
         const userId = user.id
         const threads = dispatch(getThreads(userId))
         console.log(threads)
     },[])
+    // Function to Create a dynamic redirect to the actual thread
     const redirectToThread = (e, user, thread) =>{
         e.preventDefault()
         console.log(thread, user)

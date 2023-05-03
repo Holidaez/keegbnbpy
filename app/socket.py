@@ -5,10 +5,7 @@ socketio = SocketIO()
 
 #! Needs to be changed for RENDER
 if os.environ.get("FLASK_ENV") == "production":
-    origins = [
-        "http://actual-app-url.herokuapp.com",
-        "https://actual-app-url.herokuapp.com"
-    ]
+    origins = []
 else:
     origins = "*"
 
@@ -19,7 +16,6 @@ socketio = SocketIO(cors_allowed_origins=origins)
 # handle chat messages
 @socketio.on("chat")
 def handle_chat(data):
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", data)
     if data != "User connected!":
         dm = DirectMessage(
             sender_id=data['sender_id'],

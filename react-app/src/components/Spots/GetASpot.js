@@ -60,6 +60,7 @@ export default function CurrentSpotDetails() {
     if (spots){
         owner = spots.owner
     }
+    //Function to dynamically redirect to a thread
     function redirectToMessage(e, user, owner){
         e.preventDefault()
         console.log(user, owner)
