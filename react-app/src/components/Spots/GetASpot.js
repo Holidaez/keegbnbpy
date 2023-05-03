@@ -8,6 +8,7 @@ import './GetASpot.css'
 
 export default function CurrentSpotDetails() {
     const { spotId } = useParams()
+    const history = useHistory()
     const dispatch = useDispatch()
     const spots = useSelector(state => state.spots)
     const user = useSelector(state => state.session.user)
@@ -55,9 +56,20 @@ export default function CurrentSpotDetails() {
         unique = test.filter(review => review.id === user.id)
     }
 
+    let owner;
+    if (spots){
+        owner = spots.owner
+    }
+    function redirectToMessage(e, user, owner){
+        e.preventDefault()
+        console.log(user, owner)
+        let path = `/directmessage/${user.id}/${owner.id}`
+        history.push(path)
+    }
 
     return (
         <div className="spot-details-container">
+            <button onClick={(e)=> redirectToMessage(e, user, owner)}>Message Host</button>
             <div className="header-div">
 
                 <h1 className="spot-name">{spots.name}</h1>

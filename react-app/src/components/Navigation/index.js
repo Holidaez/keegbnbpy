@@ -17,6 +17,9 @@ function Navigation({ isLoaded }){
 					<ProfileButton user={sessionUser} />
 				</li>
 			)}
+			<li>
+				<NavLink exact to='/test'>DMS</NavLink>
+			</li>
 		</ul>
 	);
 }

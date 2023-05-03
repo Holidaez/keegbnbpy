@@ -19,3 +19,11 @@ class DirectMessage(db.Model):
     #! Many Side Relationship
     # sender = db.relationship('User', back_populates='sender')
     # recipient = db.relationship('User',back_populates='recipient')
+
+    def to_dict(self):
+        return {
+            'id':self.id,
+            'msg':self.message,
+            'sender_id':self.sender_id,
+            'recipient_id':self.recipient_id
+        }

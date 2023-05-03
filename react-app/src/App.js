@@ -7,6 +7,8 @@ import { authenticate } from "./store/session";
 import Navigation from "./components/Navigation";
 import SpotGetter from "./components/Spots/GetAllSpots";
 import CurrentSpotDetails from "./components/Spots/GetASpot";
+import Chat from "./components/DirectMessage/directmessage";
+import MessageThreads from "./components/MessageThreads/messagethreads";
 
 function App() {
   const dispatch = useDispatch();
@@ -33,6 +35,12 @@ function App() {
           </Route>
           <Route path='/selectedSpot/:spotId' exact={true}>
             <CurrentSpotDetails/>
+          </Route>
+          <Route path='/directmessage/:userId/:ownerId' exact={true}>
+            <Chat/>
+          </Route>
+          <Route path='/test' exact={true}>
+            <MessageThreads/>
           </Route>
         </Switch>
       )}
