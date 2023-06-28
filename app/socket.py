@@ -1,6 +1,6 @@
 from flask_socketio import SocketIO, emit
 import os
-from app.models import DirectMessage,db
+from app.models import DirectMessage,db, Like
 socketio = SocketIO()
 
 #! Needs to be changed for RENDER
@@ -26,3 +26,27 @@ def handle_chat(data):
         db.session.add(dm)
         db.session.commit()
     emit("chat", data, broadcast=True)
+
+
+# handle likes
+@socketio.on('like')
+def handle_like(data):
+    if data != "User connected!":
+        like = Like(
+          user_id = data['user_id'],
+          review_id = data['review_id']
+        )
+        db.session.add(like)
+        db.session.commit()
+    emit('like', data, broadcast=True)
+
+# handle unlikes
+@socketio.on('unlike')
+def handle_like(data):
+    if data != "User connected!":
+        target_like = Like.query.get(data['id'])
+        db.session.delete(target_like)
+        db.session.commit()
+    emit('like', data, broadcast=True)
+
+

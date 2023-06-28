@@ -36,17 +36,12 @@ def get_all_dms(sender_id, recipient_id):
         #Append the dictionary to our return list
         dm_list.append(dm_dict)
     return dm_list
-    
+
 #! Get all Message Threads Route
 @message_routes.route('/threads/<id>')
 def get_all_threads(id):
-    #Query all Direct Messages where the user was the sender
-    threads = DirectMessage.query.filter(DirectMessage.sender_id == int(id)).all()
-    #Query all Direct Messages where the user was the recipient
-    threads2 = DirectMessage.query.filter(DirectMessage.recipient_id == int(id)).all()
-    #Combine the list of threats
-    for thrd in threads2:
-        threads.append(thrd)
+    #Query all Direct Messages where the user was the sender or the recipient
+    threads = DirectMessage.query.filter(or_(DirectMessage.sender_id == int(id), DirectMessage.recipient_id == int(id))).all()
     #Initialize our user list
     userlist = []
     #Iterate through our threads

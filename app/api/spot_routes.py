@@ -71,6 +71,10 @@ def get_selected_spot(id):
         rev_user = review.user
         #! Add the user to the review
         final_review['user'] = rev_user.to_dict()
+
+        #get the likes for this review
+        rev_likes = [like.to_dict() for like in review.likes]
+        final_review['likes'] = rev_likes
         #append the reivews to the spot
         review_list.append(final_review)
 

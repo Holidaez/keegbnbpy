@@ -23,6 +23,7 @@ class Review(db.Model):
 
     #! One Side Relationships
     review_images = db.relationship('ReviewImage', back_populates='review')
+    likes = db.relationship('Like', back_populates='review')
 
     def to_dict(self):
         return {

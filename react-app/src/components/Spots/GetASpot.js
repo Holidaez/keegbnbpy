@@ -5,6 +5,7 @@ import { Redirect, useParams, useHistory } from "react-router-dom";
 import { getAllSpots, findASpot } from '../../store/spotsReducer'
 import { Link } from 'react-router-dom'
 import './GetASpot.css'
+import LikeAReview from '../LikeAReview/LikeAReview';
 
 export default function CurrentSpotDetails() {
     const { spotId } = useParams()
@@ -34,6 +35,8 @@ export default function CurrentSpotDetails() {
                                 <Link to={`/review/delete/${spotId}/${review.id}`} className="delete-review-link">Delete Review</Link>
                             )}
                         </p>
+                            <LikeAReview review={review} spotId={spotId}/>
+                        
                     </div>
                 </li>
             )

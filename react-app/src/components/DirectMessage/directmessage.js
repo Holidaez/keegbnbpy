@@ -21,7 +21,9 @@ const Chat = () => {
         // open socket connection
         // create websocket
         socket = io();
+        console.log("connected to dms socket")
         dispatch(getDMS(userId,ownerId))
+        socket.emit("chat", { user: user.username, msg: "has connected", recipient_id:ownerId, sender_id:userId })
         socket.on("chat", (chat) => {
             // Whenver a chat is sent, Dispatch our fetch to get all messages and set the messages to the returned list
             let msg = dispatch(getDMS(userId,ownerId))
@@ -31,6 +33,8 @@ const Chat = () => {
         })
         // when component unmounts, disconnect
         return (() => {
+            socket.emit("chat", { user: user.username, msg: "has disconnected", recipient_id:ownerId, sender_id:userId })
+            console.log("disconnected")
             socket.disconnect()
         })
     }, [])

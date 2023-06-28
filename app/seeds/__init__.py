@@ -3,6 +3,7 @@ from .users import seed_users, undo_users
 from .reviews import seed_reviews, undo_reviews
 from .spot_images import seed_spot_images, undo_spot_images
 from .spots import seed_spots, undo_spots
+from .likes import seed_likes, undo_likes
 from app.models.db import db, environment, SCHEMA
 
 # Creates a seed group to hold our commands
@@ -26,14 +27,16 @@ def seed():
     seed_spots()
     seed_spot_images()
     seed_reviews()
+    seed_likes()
     # Add other seed functions here
 
 
 # Creates the `flask seed undo` command
 @seed_commands.command('undo')
 def undo():
-    undo_users()
-    undo_spots()
-    undo_spot_images()
+    undo_likes()
     undo_reviews()
+    undo_spot_images()
+    undo_spots()
+    undo_users()
     # Add other undo functions here

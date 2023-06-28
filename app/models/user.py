@@ -34,6 +34,7 @@ class User(db.Model, UserMixin):
         primaryjoin=(id == DirectMessage.recipient_id),
         secondaryjoin=(id == DirectMessage.sender_id),
     )
+    likes = db.relationship('Like', back_populates='user')
 
     @property
     def password(self):
